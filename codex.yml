@@ -1,0 +1,36 @@
+# Codex Cloud Environment Configuration
+name: gpt-codex-analyzer
+description: Automated GPT + Codex code generation and analysis workflow
+
+runtime: python3.11
+
+services:
+  api:
+    type: fastapi
+    port: 8000
+    startup: "uvicorn app.main:app --host 0.0.0.0 --port 8000"
+    environment:
+      - OPENAI_API_KEY
+      - MODEL_NAME=gpt-4o-mini
+      - CLOUD_UPLOAD_URL
+      - CLOUD_TOKEN
+
+endpoints:
+  - path: /generate
+    method: POST
+    description: Generate code from requirement
+  - path: /upload
+    method: POST
+    description: Upload generated code to cloud
+
+health_check:
+  path: /docs
+  interval: 30s
+  timeout: 10s
+
+dependencies:
+  - fastapi
+  - uvicorn
+  - openai
+  - pydantic
+  - requests
